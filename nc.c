@@ -8,7 +8,6 @@
 #include <string.h>
 #define WIDTH 30
 #define HEIGHT 10
-#define HOMEDIR = "/home/kuglatec" // static, will change in future development 
 int startx = 0;
 int starty = 0;
 typedef struct Xsession {
@@ -33,7 +32,7 @@ int entryNum() {
 }
 
 
-void print_menu(WINDOW *menu_win, int highlight);
+void print_menu(WINDOW *menu_win, int highlight, Xsession Sessions[50]);
 
 
 void startde (char *path, char *username) {
@@ -42,7 +41,9 @@ void startde (char *path, char *username) {
   uid_t target_uid = user_info->pw_uid;
   setuid(target_uid);
   snprintf(cmd, 50, "startx %s", path);
-  setenv("HOME", HOMEDIR, 1);
+  char homedir[250];
+  snprintf(homedir, 250, "/home/%s", username);
+  setenv("HOME", homedir, 1);
   system("startx /bin/i3");
 }
 
@@ -50,7 +51,10 @@ void startde (char *path, char *username) {
 int main()
 {	int nof;
 	nof = entryNum();
-	Xsession Sessions[nof];
+	char user[32];
+  printf("Enter Username: ");
+  scanf("%32s", &user);
+  Xsession Sessions[nof];
 	char filenames[nof][15];
 	DIR *dir;
 	int i = 0;
@@ -132,7 +136,7 @@ int main()
 	keypad(menu_win, TRUE);
 	mvprintw(0, 0, "Use arrow keys to go up and down, Press enter to select a choice");
 	refresh();
-	print_menu(menu_win, highlight);
+	print_menu(menu_win, highlight, Sessions);
 	while(1)
 	{	c = wgetch(menu_win);
 		switch(c)
@@ -155,20 +159,20 @@ int main()
 				refresh();
 				break;
 		}
-		print_menu(menu_win, highlight);
+		print_menu(menu_win, highlight, Sessions);
 		if(choice != 0)	 
 			break;
 	}
 	mvprintw(23, 0, "You chose choice %d with choice string %s\n", choice, Sessions[choice - 1].name);
 	clrtoeol();
 	refresh();
-	if(choice == 1){ startde("/bin/i3", "kuglatec");  }
+	startde(Sessions[choice].path, user);
 	getch();
 	endwin(); 
 	return 0;
 }
 
-void print_menu(WINDOW *menu_win, int highlight)
+void print_menu(WINDOW *menu_win, int highlight, Xsession Sessions[50])
 {
 	int x, y, i;
 

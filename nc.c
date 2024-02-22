@@ -44,7 +44,8 @@ void startde (char *path, char *username) {
   char homedir[250];
   snprintf(homedir, 250, "/home/%s", username);
   setenv("HOME", homedir, 1);
-  system("startx /bin/i3");
+  
+  system("%s". cmd);
 }
 
 

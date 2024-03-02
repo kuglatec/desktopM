@@ -8,14 +8,23 @@
 #include <string.h>
 #define WIDTH 30
 #define HEIGHT 10
+
+
+
+
 int startx = 0;
 int starty = 0;
+
+
 typedef struct Xsession {
 	char name[32];
 	char path[250];
 	char exec[250];
 } Xsession;
+
+
 Xsession Sessions[50];
+
 int entryNum() {
   DIR *d;
   struct dirent *dir;
@@ -182,7 +191,7 @@ void print_menu(WINDOW *menu_win, int highlight, Xsession Sessions[50])
 	box(menu_win, 0, 0);
   int nof = entryNum();
 	for(i = 0; i < nof; ++i)
-	{	if(highlight == i + 1) /* High light the present choice */
+	{	if(highlight == i + 1)
 		{	wattron(menu_win, A_REVERSE);
 			mvwprintw(menu_win, y, x, "%s", Sessions[i].name);
 			wattroff(menu_win, A_REVERSE);

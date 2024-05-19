@@ -54,7 +54,7 @@ void startde (char *path, char *username) {
   snprintf(homedir, 250, "/home/%s", username);
   setenv("HOME", homedir, 1);
   
-  system("%s", cmd);
+  system(cmd);
 }
 
 
